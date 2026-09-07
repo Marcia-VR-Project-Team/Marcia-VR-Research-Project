@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 56517910320722443}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.067, y: -0.121, z: 0}
+  m_LocalPosition: {x: -0.087500006, y: -0.121, z: -0.3245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -78,7 +78,7 @@ Transform:
   m_GameObject: {fileID: 1361045279727500235}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0078}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -112,14 +112,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793934670425005442}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.12464841, w: 0.99220103}
+  m_LocalPosition: {x: -0.22576983, y: -0.045220137, z: -0.2533}
+  m_LocalScale: {x: 0.6857, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6933108728962775577}
   m_Father: {fileID: 6142200528129308300}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -14.321}
 --- !u!1 &2711217111598842740
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,7 +452,7 @@ Transform:
   m_GameObject: {fileID: 3267248108517691952}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.135, y: -0.121, z: 0}
+  m_LocalPosition: {x: -0.019500002, y: -0.121, z: -0.3245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -571,8 +571,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 4.4
+  m_fontSizeBase: 4.4
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -610,7 +610,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5.157585, y: 7.0960045, z: 4.142372, w: 2.1492958}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -751,7 +751,7 @@ Transform:
   m_GameObject: {fileID: 5770793666822737082}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.199, y: -0.121, z: 0}
+  m_LocalPosition: {x: 0.044499993, y: -0.121, z: -0.3245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -804,7 +804,7 @@ Transform:
   m_GameObject: {fileID: 6537113987455891830}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.121, z: 0}
+  m_LocalPosition: {x: -0.1545, y: -0.121, z: -0.3245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1012,6 +1012,8 @@ GameObject:
   - component: {fileID: 6142200528129308300}
   - component: {fileID: 7761425889200208692}
   - component: {fileID: 5339391884923236920}
+  - component: {fileID: 1672722402366336207}
+  - component: {fileID: 9089877585201436003}
   m_Layer: 0
   m_Name: Exam
   m_TagString: Untagged
@@ -1050,8 +1052,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questions: []
+  answerA: {fileID: 0}
+  answerB: {fileID: 0}
+  answerC: {fileID: 0}
+  answerD: {fileID: 0}
+  previousButton: {fileID: 0}
+  nextButton: {fileID: 0}
   paperText: {fileID: 850319712533248375}
-  QuestionNumber: 0
+  examVisuals:
+  - {fileID: 1793934670425005442}
+  - {fileID: 1361045279727500235}
+  - {fileID: 0}
+  beginOnStartForTesting: 0
 --- !u!114 &5339391884923236920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1124,3 +1136,47 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+--- !u!114 &1672722402366336207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8907925106559693943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b90a46c48b9dc44f8324b7758f5f4ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deskA: {fileID: 0}
+  deskB: {fileID: 0}
+--- !u!114 &9089877585201436003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8907925106559693943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 02438391b8115bf4a97ea4b8d0f89882, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7761425889200208692}
+          m_TargetAssemblyTypeName: Exam, Assembly-CSharp
+          m_MethodName: BeginExam
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
