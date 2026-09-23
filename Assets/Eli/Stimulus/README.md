@@ -16,7 +16,11 @@ There are five components you'll work with:
 | `StimulusSequence` | Triggers a list of Stimuli one at a time, in order |
 | `StimulusActionTrigger` | Connects a Stimulus or StimulusSequence to a Unity Input Action |
 | `StimuliCollector` | Stops all active Stimuli and/or Sequences at once — used by the Control Panel |
-| `StimulusLogger` | Writes timestamped event logs to a file in the background |
+| `SessionLogger` | Writes all session data to file from a dedicated background thread. Replaces `StimulusLogger` |
+| `TrackingSampler` | Samples head and hand pose at a fixed rate |
+| `InputEventLogger` | Logs controller button presses as they happen |
+| `SceneEventMarker` | Lets scene content log events via UnityEvents or trigger volumes |
+| `StimulusLogger` | **Deprecated.** A thin shim kept so old scenes and old `StimulusLogger.Log(...)` calls still work |
 
 > **Core mental model:** `AnimationStimulus` and `AudioStimulus` are the basic units — one does animation, one does audio, and they're intentionally separate so you can stop all audio independently from all animation and vice versa. A `StimulusSequence` chains any mix of them together in order. Everything else is plumbing.
 
@@ -210,3 +214,50 @@ This would mean an older version of `StimuliCollector` is in the scene. The curr
 | Stop all audio | Call `StopAllSound()` on the StimuliCollector |
 | Stop all animation | Call `StopAllAnimations()` on the StimuliCollector |
 | Stop everything | Call `StopAllStimuli()` on the StimuliCollector |
+
+---
+
+## Session Logging (v3)
+
+The logger was rebuilt to support synchronising with an Empatica watch. What changed:
+
+- **Everything is UTC.** Timestamps come from `SessionClock`, which anchors to the wall clock
+  once at startup and measures from there with a hardware `Stopwatch`. `DateTime.UtcNow` alone
+  ticks only about every 15 ms on Windows, which is too coarse to order events within a frame.
+- **Three files per session**, in `Application.persistentDataPath`, sharing one session id:
+  `_events.csv` (discrete events), `_tracking.csv` (pose samples), `_meta.txt` (session start
+  and clock info).
+- **Join with Empatica data on the `unix_ms` column.**
+- **Fire a sync marker** at the start and end of every session, at the same moment you press the
+  tag button on the watch. Bind a controller button to `InputEventLogger`'s *Sync Marker Action*,
+  or call `SessionLogger.SyncMarker("start")`. Two markers let you correct for clock drift over
+  the session, not just a constant offset.
+
+### Setup
+
+All three components live on the **Stimulus Logger** prefab (`Assets/Eli/Stimulus Logger.prefab`),
+so any scene that already has that prefab is set up. Per scene you only need to:
+
+1. Set **Participant Id** on `SessionLogger`.
+2. Assign the actions you want recorded on `InputEventLogger`, including the **Sync Marker Action**.
+
+`TrackingSampler` finds the head and hands by itself at runtime, so it needs nothing assigned. If
+it cannot find one, it warns in the console *and* writes a `TRACKING_TARGET_MISSING` row, so a
+missing hand shows up in the data rather than being discovered after the participant has left.
+
+### A caveat about sample rate
+
+The file writing genuinely runs on its own thread. Reading the poses cannot — Unity's `Transform`
+and XR APIs throw off the main thread. So the sampler reads on the main thread and hands off
+immediately. Nothing blocks on disk, but **the sample rate cannot exceed the frame rate**: ask for
+90 Hz on a 72 Hz headset and you get 72. Every row carries the UTC time it was actually read at,
+so treat the rows as irregularly spaced and resample against the timestamp column.
+
+### Logging your own events
+
+```csharp
+SessionLogger.Event("TEACHER_LOOKED_AWAY", gameObject.name, "duration=2.4");
+```
+
+Safe to call from any thread, and cheap enough for input callbacks and collision handlers. For
+designers, `SceneEventMarker` exposes the same thing as inspector-callable methods.

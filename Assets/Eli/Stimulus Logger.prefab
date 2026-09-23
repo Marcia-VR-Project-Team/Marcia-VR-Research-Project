@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7256526063506936896}
   - component: {fileID: 8259402062660507869}
+  - component: {fileID: 8259402062660507870}
+  - component: {fileID: 8259402062660507871}
   m_Layer: 0
   m_Name: Stimulus Logger
   m_TagString: Untagged
@@ -41,7 +43,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 2772886075148134693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7474efa99763fc0418424c5975b75ceb, type: 3}
+  m_Script: {fileID: 11500000, guid: eb0a9dd963b94791b68cad02d1e9c619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  participantId: unspecified
   logLocation_TMP_Text: {fileID: 0}
+  openExplorerOnExit: 1
+  flushIntervalMs: 500
+--- !u!114 &8259402062660507870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2772886075148134693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2beedadd3c1048ff8331e9c0437780c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  head: {fileID: 0}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  additionalTargets: []
+  samplesPerSecond: 50
+  sampleHandJoints: 0
+  leftHandName: Left Hand
+  rightHandName: Right Hand
+--- !u!114 &8259402062660507871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2772886075148134693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aba5e8e194b24a4c9fb81c6041592d16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actions: []
+  logReleases: 1
+  syncMarkerAction: {fileID: 0}

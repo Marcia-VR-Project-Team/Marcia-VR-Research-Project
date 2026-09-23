@@ -38,6 +38,7 @@ public class RunManager : MonoBehaviour
         if (roundHasBegun && !roundHasEnded && (other.name == "door_frame_right" || other.name == "door_frame_left") && allowCollisions)
         {
             Debug.Log("Round " + runCounter + " Exited door");
+            SessionLogger.Event("DOOR_EXIT", other.name, $"round={runCounter}");
             bool rightDoorExitedThrough = other.name == "door_frame_right";
             bool playerExitedThroughEntryDoor = (rightDoorExitedThrough && playerEnteredThroughRightDoor) || (!rightDoorExitedThrough && !playerEnteredThroughRightDoor);
             bool anomalyIsActive = anomalyManager.GetComponent<AnomalyManager>().anomalyIsActive;
@@ -49,6 +50,7 @@ public class RunManager : MonoBehaviour
         else if (!roundHasBegun && !roundHasEnded && (other.name == "door_frame_right" || other.name == "door_frame_left") && allowCollisions)
         {
             Debug.Log("Round " + runCounter + " Entered door");
+            SessionLogger.Event("DOOR_ENTER", other.name, $"round={runCounter}");
 
             roundHasBegun = true;
             playerEnteredThroughRightDoor = other.name == "door_frame_right";      
@@ -67,6 +69,11 @@ public class RunManager : MonoBehaviour
 
     IEnumerator FinishRound(bool playerMadeRightChoice)
     {
+        // Logged before the fade so the timestamp marks the participant's decision, not the end
+        // of the transition animation.
+        SessionLogger.Event("ROUND_END", nameof(RunManager),
+            $"round={runCounter}; correct={playerMadeRightChoice}");
+
         yield return fadeController.FadeOut();
         // Player chose correct door or there is no anomaly
         if (playerMadeRightChoice)
@@ -93,6 +100,8 @@ public class RunManager : MonoBehaviour
         // playerHasWon
         if (runCounter == totalRuns)
         {
+            SessionLogger.Event("GAME_WON", nameof(RunManager), $"rounds={totalRuns}");
+
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             anomalyManager.GetComponent<AnomalyManager>().ResetRound(runCounter);
