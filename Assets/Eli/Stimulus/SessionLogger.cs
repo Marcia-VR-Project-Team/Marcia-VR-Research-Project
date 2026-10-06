@@ -184,7 +184,8 @@ public class SessionLogger : MonoBehaviour
         if (logLocation_TMP_Text != null)
             logLocation_TMP_Text.text = $"Session {_sessionId}\n{dir}";
 
-        Event("SESSION_START", "SessionLogger", $"participant={participantId}");
+        Event("SESSION_START", "SessionLogger",
+            $"participant={participantId}; platform={Application.platform}");
     }
 
     /// <summary>
@@ -293,6 +294,55 @@ public class SessionLogger : MonoBehaviour
     {
         Event("SYNC_MARKER", "Researcher", label);
         UnityEngine.Debug.Log($"SYNC MARKER '{label}' at {SessionClock.ToIso(SessionClock.UtcNow)}");
+    }
+
+    /// <summary>
+    /// Reports the build mode once the scene has fully started.
+    ///
+    /// <para>This deliberately does not run in Awake. Two things make an early read wrong:
+    /// this component has an execution order of -100 so it wakes before anything else, and
+    /// <c>ModeController</c> applies the command line override (<c>-mode vr|desktop|triple</c>)
+    /// in its own Start. Reading early therefore reports the inspector dropdown rather than the
+    /// mode the build is actually running in — which for a build is simply the wrong answer, and
+    /// wrong quietly.</para>
+    ///
+    /// <para>Waiting for the end of the first frame means every Awake and Start has run, so the
+    /// value recorded is the one in force for the session.</para>
+    /// </summary>
+    private System.Collections.IEnumerator ReportBuildMode()
+    {
+        yield return new WaitForEndOfFrame();
+
+        Event("BUILD_MODE", "SessionLogger", DescribeBuildMode());
+    }
+
+    void Start()
+    {
+        StartCoroutine(ReportBuildMode());
+    }
+
+    /// <summary>
+    /// Describes which of the three build modes this session is running in, and which XR device
+    /// is actually present.
+    ///
+    /// <para>Without this, sessions from the VR, desktop and triple-monitor builds are
+    /// indistinguishable in the data — and comparing them is the whole reason three builds
+    /// exist. The XR device name is included separately because the mode is what was *asked*
+    /// for, while the device is what the participant actually had: a VR-mode session with no
+    /// headset connected is a real possibility and should not look like a successful one.</para>
+    /// </summary>
+    private static string DescribeBuildMode()
+    {
+        string mode = "unknown";
+
+        ModeController controller = FindAnyObjectByType<ModeController>(FindObjectsInactive.Include);
+        if (controller != null) mode = controller.mode.ToString();
+
+        string xrDevice = UnityEngine.XR.XRSettings.isDeviceActive
+            ? UnityEngine.XR.XRSettings.loadedDeviceName
+            : "none";
+
+        return $"mode={mode}; xr_device={xrDevice}";
     }
 
     /// <summary>

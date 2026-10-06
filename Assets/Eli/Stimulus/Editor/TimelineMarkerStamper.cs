@@ -86,8 +86,13 @@ public static class TimelineMarkerStamper
 
         foreach (TrackAsset t in timeline.GetOutputTracks())
         {
-            // Skip the marker track itself, and group tracks, which hold no clips.
-            if (t is MarkerTrack) continue;
+            // Skip only the track we are writing into, never every marker track.
+            //
+            // SignalTrack derives from MarkerTrack, so testing "is MarkerTrack" also skipped the
+            // Signal Track — which is where ExamBeginSignal lives. That silently dropped the one
+            // marker that matters most, because a signal drives gameplay rather than just
+            // playing a sound. Compare by reference instead.
+            if (ReferenceEquals(t, track)) continue;
 
             // A muted track produces no sound, so marking its clips would put events in the log
             // that the participant never experienced. This is how the language condition is
@@ -160,7 +165,11 @@ public static class TimelineMarkerStamper
     {
         int added = 0;
 
-        foreach (SignalEmitter signal in source.GetMarkers().OfType<SignalEmitter>())
+        // Snapshot first: when source and track are the same object, adding a marker while
+        // enumerating that track's own markers would invalidate the enumeration.
+        List<SignalEmitter> signals = source.GetMarkers().OfType<SignalEmitter>().ToList();
+
+        foreach (SignalEmitter signal in signals)
         {
             string signalName = signal.asset != null ? signal.asset.name : "(no signal asset)";
 

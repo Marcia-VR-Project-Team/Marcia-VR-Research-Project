@@ -17,6 +17,8 @@ There are five components you'll work with:
 | `StimulusActionTrigger` | Connects a Stimulus or StimulusSequence to a Unity Input Action |
 | `StimuliCollector` | Stops all active Stimuli and/or Sequences at once — used by the Control Panel |
 | `SessionLogger` | Writes all session data to file from a dedicated background thread. Replaces `StimulusLogger` |
+| `InputDeviceLogger` | Logs raw device input: keyboard, mouse/trackpad, gamepad, VR controller buttons and sticks |
+| `InteractionLogger` | Logs what was interacted with and how: VR poke, ray press, grab, UI button click |
 | `TrackingSampler` | Samples head and hand pose at a fixed rate |
 | `InputEventLogger` | Logs controller button presses as they happen |
 | `SceneEventMarker` | Lets scene content log events via UnityEvents or trigger volumes |
@@ -261,3 +263,56 @@ SessionLogger.Event("TEACHER_LOOKED_AWAY", gameObject.name, "duration=2.4");
 
 Safe to call from any thread, and cheap enough for input callbacks and collision handlers. For
 designers, `SceneEventMarker` exposes the same thing as inspector-callable methods.
+
+---
+
+## Input logging across the three build modes (v4)
+
+`ModeController` runs the classroom in **VR**, **Desktop** and **TripleMonitor**. Two components
+cover input in all three, and both sit on the **Stimulus Logger** prefab, so any scene with that
+prefab gets them.
+
+### `InputDeviceLogger` - what the hardware did
+
+Subscribes to the Input System globally rather than to a list of actions, so it cannot miss an
+input because nobody added a binding. Covers:
+
+| Event type | Covers |
+|---|---|
+| `INPUT_KEYBOARD_PRESS` | any key |
+| `INPUT_POINTER_PRESS` | mouse and trackpad clicks, with pointer position |
+| `INPUT_GAMEPAD_PRESS` | gamepad buttons |
+| `INPUT_XRCONTROLLER_PRESS` | VR controller buttons, triggers, grips |
+| `INPUT_*_STICK_START` / `_END` | joystick and thumbstick, logged on crossing the deadzone |
+
+Sticks log transitions, not frames: a stick held for three seconds is two rows, not 150.
+
+### `InteractionLogger` - what the participant touched
+
+| Event type | Meaning |
+|---|---|
+| `INTERACTION_SELECT` | an XR interactable was selected |
+| `INTERACTION_SELECT_END` | released - gives press duration |
+| `INTERACTION_UI_BUTTON` | a Unity UI button was clicked |
+
+Every row carries `method=`, which is the part that makes the three builds comparable:
+
+- `poke` - the VR push, a fingertip or controller tip entering the button
+- `ray` - a press at distance, used by the VR controller pointer **and** the desktop mouse pointer
+- `direct` - a grab with the hand inside the object
+- `ui` - a canvas button click
+
+`ModeController` disables the poke filters in desktop mode so the same desk button accepts a ray
+press. Without `method=`, data from the three modes would be indistinguishable afterwards.
+
+### Build mode in the log
+
+`SESSION_START` now records `mode=`, `xr_device=` and `platform=`. The device is recorded
+separately from the mode on purpose: a VR-mode session with no headset connected is a real
+possibility, and it should not look like a successful one.
+
+### Known limitation
+
+A laptop trackpad and an external mouse both present as a generic `Mouse` device, and the Input
+System reports them identically. Both log as `POINTER`, with the device's display name in the
+detail column - usually, but not always, enough to tell them apart afterwards.

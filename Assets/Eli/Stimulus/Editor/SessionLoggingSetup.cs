@@ -55,8 +55,25 @@ public static class SessionLoggingSetup
     /// <returns>1 if one was added, 0 if the scene already had one.</returns>
     private static int EnsureLogger()
     {
-        if (Object.FindAnyObjectByType<SessionLogger>(FindObjectsInactive.Include) != null)
+        SessionLogger existing = Object.FindAnyObjectByType<SessionLogger>(FindObjectsInactive.Include);
+
+        if (existing != null)
+        {
+            // A logger under a disabled parent never has Awake called, so it writes no file at
+            // all — the session looks like it ran and produces nothing. Scenes group objects
+            // under disabled separators like "== UI+Stimulus ==", which are deliberately off,
+            // so the fix is to lift the logger out rather than re-enable the group and switch
+            // its other contents back on.
+            if (!existing.gameObject.activeInHierarchy && existing.transform.parent != null)
+            {
+                Undo.SetTransformParent(existing.transform, null, "Move Session Logger To Root");
+                Debug.LogWarning(
+                    $"[Session Logging] '{existing.name}' was under a disabled parent and would " +
+                    "never have run. Moved it to the scene root.", existing);
+            }
+
             return 0;
+        }
 
         GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(LOGGER_PREFAB_PATH);
         if (prefab == null)
@@ -172,6 +189,13 @@ public static class SessionLoggingSetup
         var logger = Object.FindAnyObjectByType<SessionLogger>(FindObjectsInactive.Include);
         var sampler = Object.FindAnyObjectByType<TrackingSampler>(FindObjectsInactive.Include);
         var input = Object.FindAnyObjectByType<InputEventLogger>(FindObjectsInactive.Include);
+        var devices = Object.FindAnyObjectByType<InputDeviceLogger>(FindObjectsInactive.Include);
+        var interactions = Object.FindAnyObjectByType<InteractionLogger>(FindObjectsInactive.Include);
+
+        // The mode decides which input paths the session can produce at all, so a check that did
+        // not name it could pass while the scene was set to the wrong build type.
+        var modeController = Object.FindAnyObjectByType<ModeController>(FindObjectsInactive.Include);
+        string modeText = modeController != null ? modeController.mode.ToString() : "no ModeController";
 
         PlayableDirector[] directors =
             Object.FindObjectsByType<PlayableDirector>(FindObjectsInactive.Include,
@@ -191,9 +215,12 @@ public static class SessionLoggingSetup
 
         string report =
             $"Scene: {SceneManager.GetActiveScene().name}\n\n" +
-            $"SessionLogger:      {Mark(logger != null)}\n" +
-            $"TrackingSampler:    {Mark(sampler != null)}\n" +
-            $"InputEventLogger:   {Mark(input != null)}\n" +
+            $"SessionLogger:      {MarkActive(logger)}\n" +
+            $"TrackingSampler:    {MarkActive(sampler)}\n" +
+            $"InputEventLogger:   {MarkActive(input)}\n" +
+            $"InputDeviceLogger:  {MarkActive(devices)}\n" +
+            $"InteractionLogger:  {MarkActive(interactions)}\n" +
+            $"Build mode:          {modeText}\n" +
             $"Camera.main:        {Mark(cam != null)}{(cam != null ? $" ({cam.name})" : " - head will not be tracked")}\n" +
             $"PlayableDirectors:  {directors.Length}, with receiver: {withReceiver}\n" +
             $"Timeline will start: {Mark(withStarter > 0 || playOnAwake > 0)}" +
@@ -207,4 +234,41 @@ public static class SessionLoggingSetup
     /// Renders a pass/fail marker for the report.
     /// </summary>
     private static string Mark(bool ok) => ok ? "OK" : "MISSING";
+
+    /// <summary>
+    /// Reports a logging component's real state, not merely whether it exists.
+    ///
+    /// <para>The search deliberately includes inactive objects, because the exam buttons are
+    /// hidden until the exam begins. For the loggers themselves that leniency is dangerous: a
+    /// component under a disabled parent never has Awake called, so it produces no file and no
+    /// rows. Existence is not the question — whether it will run is.</para>
+    /// </summary>
+    private static string MarkActive(Component component)
+    {
+        if (component == null) return "MISSING";
+
+        // activeInHierarchy is false when any ancestor is disabled, which is precisely the case
+        // that silently produced an empty session.
+        if (!component.gameObject.activeInHierarchy)
+            return $"PRESENT BUT INACTIVE - will not run (parent '{TopInactive(component.transform)}' is disabled)";
+
+        var behaviour = component as Behaviour;
+        if (behaviour != null && !behaviour.enabled) return "PRESENT BUT DISABLED";
+
+        return "OK";
+    }
+
+    /// <summary>
+    /// Names the highest disabled object above this one, so the report says what to re-enable
+    /// rather than leaving it to be hunted in the hierarchy.
+    /// </summary>
+    private static string TopInactive(Transform t)
+    {
+        string name = t.name;
+
+        for (Transform current = t; current != null; current = current.parent)
+            if (!current.gameObject.activeSelf) name = current.name;
+
+        return name;
+    }
 }

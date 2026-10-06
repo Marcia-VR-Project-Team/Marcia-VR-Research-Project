@@ -60,7 +60,7 @@ public class InputDeviceLogger : MonoBehaviour
     /// </summary>
     [Tooltip("Control names never logged, to avoid double-logging one physical press.")]
     [SerializeField]
-    private string[] ignoredControls = { "anyKey", "press" };
+    private string[] ignoredControls = { "anyKey" };
 
     /// <summary>
     /// Handle for the global button-press subscription, so it can be released on disable.
@@ -78,8 +78,29 @@ public class InputDeviceLogger : MonoBehaviour
     /// </summary>
     private readonly List<StickControl> stickBuffer = new List<StickControl>();
 
+    /// <summary>
+    /// Records every input device present at startup, and any that connect later.
+    ///
+    /// <para>This is what makes a missing input diagnosable. Without it, "the trackpad did not
+    /// log" is ambiguous between the device never being seen by Unity and its presses not being
+    /// captured — and those have completely different causes. Listing the devices separates the
+    /// two before any guessing starts.</para>
+    /// </summary>
+    private void LogConnectedDevices()
+    {
+        foreach (InputDevice device in InputSystem.devices)
+        {
+            SessionLogger.Event("INPUT_DEVICE_PRESENT", device.displayName,
+                $"id={device.deviceId}; category={Categorise(device)}; " +
+                $"layout={device.layout}; product={device.description.product}; " +
+                $"interface={device.description.interfaceName}");
+        }
+    }
+
     void OnEnable()
     {
+        LogConnectedDevices();
+
         if (logButtonPresses)
         {
             // onAnyButtonPress fires for any button-like control on any device, including ones
@@ -107,10 +128,29 @@ public class InputDeviceLogger : MonoBehaviour
         foreach (string ignored in ignoredControls)
             if (control.name == ignored) return;
 
+        // "press" needs care rather than a blanket ignore.
+        //
+        // A Mouse reports both "leftButton" and a synonym "press" that shares its state, so
+        // logging both would double every click. But a Touchscreen or Pen has no "leftButton" —
+        // "press" is its only button — so ignoring the name outright silently discarded every
+        // tap from those devices. That is why trackpad input appeared not to register at all.
+        //
         InputDevice device = control.device;
+
+        // So: drop "press" only where a real "leftButton" exists to represent the same action.
+        if (control.name == "press" && device.TryGetChildControl("leftButton") != null) return;
+
         string category = Categorise(device);
 
-        string detail = $"device={device.displayName}; control={control.path}";
+        // deviceId and product are included because displayName alone is useless for telling a
+        // laptop trackpad from an external mouse: Windows presents both as a generic "Mouse".
+        // They are separate physical devices with separate ids, so the id is what actually
+        // distinguishes them, and the product string usually names the hardware.
+        string product = device.description.product;
+        string detail = $"device={device.displayName}; id={device.deviceId}; " +
+                        $"control={control.path}";
+
+        if (!string.IsNullOrEmpty(product)) detail += $"; product={product}";
 
         // A click is only interpretable alongside where the pointer was.
         if (includePointerPosition && device is Pointer pointer)
