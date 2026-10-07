@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Syntax Terror
-  productName: Classroom Anomaly
+  companyName: VR Project
+  productName: SENSE
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0, g: 0.007843138, b: 0.11764707, a: 1}
@@ -149,7 +149,9 @@ PlayerSettings:
   bundleVersion: 0.1.0
   preloadedAssets:
   - {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  - {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
+  - {fileID: 0}
+  - {fileID: 9133735995656743046, guid: 6e87119b3e4f81f44b0a2e43ccf6fa4e, type: 2}
+  - {fileID: -4872123079576305562, guid: d214aafaf4c4ca54e9a54444f3a610e2, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -171,9 +173,9 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.UnityTechnologies.com.unity.template.urpblank
-    Standalone: com.Unity-Technologies.com.unity.template.urp-blank
-    iPhone: com.Unity-Technologies.com.unity.template.urp-blank
+    Android: com.vrproject.sense
+    Standalone: com.vrproject.sense
+    iPhone: com.vrproject.sense
   buildNumber:
     Standalone: 0
     VisionOS: 0

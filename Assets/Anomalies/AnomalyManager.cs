@@ -31,6 +31,10 @@ public class AnomalyManager : MonoBehaviour
         anomalyIsActive = roundNumber == 0 ? false : !(Random.Range(0, 4) == 1); // 1 in 4 chance of no anomaly
         Debug.Log("Anomaly is active: " + anomalyIsActive);
 
+        // Recorded so the analysis knows the ground truth of each round without replaying it.
+        SessionLogger.Event("ROUND_START", nameof(AnomalyManager),
+            $"round={roundNumber}; anomaly_active={anomalyIsActive}");
+
         if (anomalyIsActive)
         {
             ActivateAnAnomaly();
@@ -53,6 +57,11 @@ public class AnomalyManager : MonoBehaviour
         Debug.Log("Randomly chosen Anomaly: " + chosenAnomaly);
 
         chosenAnomaly.Activate(); // Activate the anomaly
+
+        // Which anomaly was shown is the key independent variable, so it is logged at the moment
+        // it becomes visible rather than reconstructed afterwards.
+        SessionLogger.Event("ANOMALY_ACTIVATED", chosenAnomalyObject.name,
+            $"type={chosenAnomaly.GetType().Name}");
         usedAnomalies.Add(chosenAnomalyObject);
         anomalies.Remove(chosenAnomalyObject);
     }
