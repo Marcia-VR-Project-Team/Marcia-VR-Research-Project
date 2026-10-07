@@ -1,9 +1,22 @@
 """
 Turn raw SENSE session logs into analysis-ready tables.
 
-Run it with no arguments and it finds the logs itself:
+Run it from the repository root, with no arguments, and it finds the logs
+itself:
 
-    python Analysis/combine_session_logs.py
+    cd <repo root>
+    py Analysis/combine_session_logs.py
+
+On Windows use "py", not "python": a default Windows install routes
+"python" to an App Execution Alias that opens the Microsoft Store instead
+of running anything. On macOS and Linux use python3.
+
+Or pass a folder, which is what logs pulled off a Quest need:
+
+    py Analysis/combine_session_logs.py ./sessions
+
+It looks in the current user's AppData by default, so it only finds
+sessions recorded on the machine you run it from.
 
 Outputs, written next to the logs in an "analysis" subfolder:
 

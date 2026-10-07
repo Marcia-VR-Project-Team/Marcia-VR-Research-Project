@@ -187,3 +187,9 @@ InitTestScene*.unity*
 # macOS
 *.DS_Store
 *.slnx
+
+# Written by com.unity.test-framework.performance every time the editor runs.
+# Machine-specific (hardware, resolution, package list) and regenerated, so it
+# is pure churn in a shared repo.
+/[Aa]ssets/[Rr]esources/PerformanceTestRunInfo.json*
+/[Aa]ssets/[Rr]esources/PerformanceTestRunSettings.json*
