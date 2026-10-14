@@ -7,7 +7,7 @@ public class WindowButton : MonoBehaviour
     private bool isPressedV = false;
     private bool isPressedW = false;
 
-    public GameObject[] hideableGroups;
+    public BlindsAnimation[] blindsAnimations;
 
     public void VolumeChange()
     {
@@ -27,18 +27,22 @@ public class WindowButton : MonoBehaviour
     {
         if (isPressedW)
         {
-            foreach (GameObject group in hideableGroups)
+
+            foreach (BlindsAnimation blind in blindsAnimations)
             {
-                group.SetActive(false);
+                if (blind != null)
+                    blind.RaiseBlinds();
             }
 
             isPressedW = false;
         }
         else
         {
-            foreach (GameObject group in hideableGroups)
+
+            foreach (BlindsAnimation blind in blindsAnimations)
             {
-                group.SetActive(true);
+                if (blind != null)
+                    blind.LowerBlinds();
             }
 
             isPressedW = true;
