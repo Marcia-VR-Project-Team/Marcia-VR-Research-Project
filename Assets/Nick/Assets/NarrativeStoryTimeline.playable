@@ -106,7 +106,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S1
+    m_DisplayName: VO_Teacher_Instructions_Eng1
   - m_Version: 1
     m_Start: 37
     m_ClipIn: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S2
+    m_DisplayName: VO_Teacher_Instructions_Eng2
   - m_Version: 1
     m_Start: 47.03333333333333
     m_ClipIn: 1
@@ -244,7 +244,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S3
+    m_DisplayName: VO_Teacher_Instructions_Eng3
   - m_Version: 1
     m_Start: 201.21455782312916
     m_ClipIn: 1
@@ -313,7 +313,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S4
+    m_DisplayName: VO_Teacher_Instructions_Eng4
   - m_Version: 1
     m_Start: 384.9265578231292
     m_ClipIn: 0
@@ -495,7 +495,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: groupLaugh
+    m_DisplayName: AMB_Group_Laugh
   - m_Version: 1
     m_Start: 17.95
     m_ClipIn: 0
@@ -564,7 +564,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: zipper sound down
+    m_DisplayName: SFX_Zipper_Down
   - m_Version: 1
     m_Start: 332.6865578231292
     m_ClipIn: 0
@@ -633,7 +633,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Putting away stuff
+    m_DisplayName: SFX_Stuff_PutAway
   - m_Version: 1
     m_Start: 375.29789115646247
     m_ClipIn: 0.8666666666666671
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: classBell
+    m_DisplayName: SFX_ClassBell_Ring
   m_Markers:
     m_Objects: []
   m_TrackProperties:
@@ -957,7 +957,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S1-PT BR
+    m_DisplayName: VO_Teacher_Instructions_BR_PT1
   - m_Version: 1
     m_Start: 36.81666666666667
     m_ClipIn: 0
@@ -1026,7 +1026,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S2-PT BR
+    m_DisplayName: VO_Teacher_Instructions_BR_PT2
   - m_Version: 1
     m_Start: 44.627755102040815
     m_ClipIn: 1
@@ -1095,7 +1095,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S3-PT BR
+    m_DisplayName: VO_Teacher_Instructions_BR_PT3
   - m_Version: 1
     m_Start: 201.21455782312916
     m_ClipIn: 1
@@ -1164,7 +1164,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: teacher-S4-PT BR
+    m_DisplayName: VO_Teacher_Instructions_BR_PT4
   - m_Version: 1
     m_Start: 385.2145578231291
     m_ClipIn: 0
@@ -3696,7 +3696,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: 732459__yanqooba__fan-noise
+    m_DisplayName: AMB_Fan_Squeek_High
   m_Markers:
     m_Objects: []
   m_TrackProperties:
@@ -3963,7 +3963,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: chatter
+    m_DisplayName: AMB_Students_Chatter
   - m_Version: 1
     m_Start: 347.2145578231291
     m_ClipIn: 0
@@ -4032,7 +4032,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: chatter
+    m_DisplayName: AMB_Students_Chatter
   - m_Version: 1
     m_Start: 187.23122448979586
     m_ClipIn: 0.8166666666666913
@@ -4083,7 +4083,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: 571797__nachtmahrtv__door-slamming-hard
+    m_DisplayName: SFX_Door_Slam
   - m_Version: 1
     m_Start: 252.31666666666666
     m_ClipIn: 1.8499999999999943
@@ -4134,7 +4134,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: waterbottle
+    m_DisplayName: SFX_WaterBottle_Falling
   m_Markers:
     m_Objects: []
   m_TrackProperties:
@@ -4302,7 +4302,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: walking-on-carpet
+    m_DisplayName: SFX_Carpet_Walking
   - m_Version: 1
     m_Start: 239.8645578231292
     m_ClipIn: 0
@@ -4371,7 +4371,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Bus arrives and depart Exterior sound effect (Royalty Free)
+    m_DisplayName: SFX_Bus_ArrivingDeparting_Exterior
   m_Markers:
     m_Objects: []
   m_TrackProperties:
