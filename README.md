@@ -141,6 +141,7 @@ This project's main scene is the classroom.
    - **Hold the right mouse button** and move the mouse to look around.
    - While holding the right mouse button, use **W, A, S, D** to move.
    - **Scroll the mouse wheel** to zoom.
+   - BEFORE RUNNING THE SCENE: look at the top white bar with all the different settings. Click on Tools > Start Logging > Set up in current scene. Then, look at the bottom left side of the screen, where the project folders are. Go into       Nick > Assets, and click on the film icon (timeline). Go back to Tools > Start Logging > Add Spacebar Timeline Starter.
 5. To run the experience, click the **Play ▶** button at the top center of the window. Click it again to stop.
 
 > **Note:** If you are not wearing a VR headset, running the scene on your monitor may look different from the headset experience, and controllers will not work. That is normal.
