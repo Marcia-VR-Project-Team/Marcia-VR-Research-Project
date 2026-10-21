@@ -9,6 +9,8 @@ TagManager:
   - Professor
   - Door
   - IgnoreAnomaly
+  - StimulusTitle
+  - StimulusText
   layers:
   - Default
   - TransparentFX
