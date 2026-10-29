@@ -14204,7 +14204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69fa4f48fffd4aa4f8efdae8dd7db2d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 1
+  mode: 2
   allowCommandLineOverride: 1
   tripleDisplayRig: {fileID: 1567795175}
   desktopPointer: {fileID: 1437828997}
@@ -14252,12 +14252,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config:
-    verticalFovDeg: 55
+    verticalFovDeg: 38
     leftDisplay: 1
     centerDisplay: 0
     rightDisplay: 2
     autoSideAngle: 1
-    sideAngleDeg: 45
+    sideAngleDeg: 25
   useConfigFile: 1
   leftCamera: {fileID: 0}
   centerCamera: {fileID: 0}

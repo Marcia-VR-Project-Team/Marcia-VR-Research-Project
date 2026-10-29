@@ -93,6 +93,27 @@ public class DesktopPointer : MonoBehaviour
         Vector2 screenPos = mouse.position.ReadValue();
         int displayIndex = 0;
 
+#if UNITY_EDITOR
+        // In the Editor every Game view reports one display, so the build's
+        // per-display lookup below can't tell the views apart. The mouse is
+        // read from the focused Game view, so ask that view which display
+        // it shows.
+        int editorDisplay = FocusedGameViewDisplay();
+        if (editorDisplay >= 0)
+        {
+            Camera editorCam = null;
+            foreach (var c in cameras)
+                if (c != null && c.targetDisplay == editorDisplay) { editorCam = c; break; }
+
+            if (editorCam != null)
+            {
+                Ray editorRay = editorCam.ScreenPointToRay(screenPos);
+                transform.rotation = Quaternion.LookRotation(editorRay.direction, Vector3.up);
+                return;
+            }
+        }
+#endif
+
         // With native multi-display, the cursor's coordinates have to be
         // translated into the display it is actually over. z carries the
         // display index. A single wide display (Surround/Eyefinity) skips this.
@@ -114,6 +135,34 @@ public class DesktopPointer : MonoBehaviour
         // The interactor casts along its own forward, so point it down the ray.
         transform.rotation = Quaternion.LookRotation(ray.direction, Vector3.up);
     }
+
+#if UNITY_EDITOR
+    static System.Reflection.PropertyInfo _targetDisplayProp;
+
+    /// <summary>
+    /// The display index (0 = Display 1) of the Game view that has focus, or
+    /// -1 if no Game view is focused. Game views keep this setting internal,
+    /// so it is read by reflection.
+    /// </summary>
+    static int FocusedGameViewDisplay()
+    {
+        var window = UnityEditor.EditorWindow.focusedWindow;
+        if (window == null || window.GetType().Name != "GameView") return -1;
+
+        if (_targetDisplayProp == null)
+        {
+            const System.Reflection.BindingFlags flags =
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic;
+
+            for (var t = window.GetType(); t != null && _targetDisplayProp == null; t = t.BaseType)
+                _targetDisplayProp = t.GetProperty("targetDisplay", flags);
+        }
+
+        return _targetDisplayProp?.GetValue(window) is int d ? d : -1;
+    }
+#endif
 
     /// <summary>
     /// The camera the cursor is over: right display, and cursor inside its
